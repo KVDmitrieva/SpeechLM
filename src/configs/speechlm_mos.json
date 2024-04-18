@@ -1,0 +1,79 @@
+{
+  "name": "SpeechLMMos",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000,
+    "spectrogram": {
+      "type": "MelSpectrogram",
+      "args": {
+      }
+    },
+    "log_spec": true
+  },
+  "arch": {
+    "type": "SpeechLMMos",
+    "args": {
+      "freeze": true,
+      "checkpoint_path": "TODO"
+    }
+  },
+  "data": {
+    "train": {
+      "batch_size": 32,
+      "num_workers": 0,
+      "datasets": [
+        {
+          "type": "FastspeechDataset",
+          "args": {
+            "part": "train",
+            "data_dir": "TODO"
+          }
+        }
+      ]
+    },
+    "val": {
+      "batch_size": 32,
+      "num_workers": 0,
+      "datasets": [
+        {
+          "type": "FastspeechDataset",
+          "args": {
+            "part": "test",
+            "data_dir": "TODO"
+          }
+        }
+      ]
+    }
+  },
+  "optimizer": {
+    "type": "Adam",
+    "args": {
+      "lr": 1e-4,
+      "weight_decay": 1e-4
+    }
+  },
+  "loss": {
+    "type": "RankLoss",
+    "args": {
+    }
+  },
+  "metrics": [],
+  "lr_scheduler": {
+    "type": "StepLR",
+    "args": {
+      "step_size": 100,
+      "gamma": 1.0
+    }
+  },
+  "trainer": {
+    "epochs": 100,
+    "save_dir": "saved/",
+    "save_period": 5,
+    "verbosity": 2,
+    "monitor": "min val_loss",
+    "early_stop": 100,
+    "visualize": "wandb",
+    "wandb_project": "speechlm",
+    "grad_norm_clip": 10
+  }
+}
