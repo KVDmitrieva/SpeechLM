@@ -24,6 +24,7 @@ class BaseFusion(nn.Module):
 
 class LinearFusion(BaseFusion):
     def __init__(self, input_dim=768, hidden_dim=128, dropout=0.1):
+        super().__init__()
         self.projection = nn.Sequential(
             nn.Linear(input_dim, hidden_dim),
             nn.ReLU(),

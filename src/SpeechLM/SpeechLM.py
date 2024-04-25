@@ -17,7 +17,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch import Tensor
 
-from modules import (
+from src.SpeechLM.modules import (
     compute_mask_indices,
     LayerNorm,
     ConvFeatureExtractionModel,
