@@ -92,6 +92,14 @@ class Trainer(BaseTrainer):
             if self.lr_scheduler is not None:
                 self.lr_scheduler.step()
 
+        self.model.eval()
+        with torch.no_grad():
+            batch["x_prediction"] = self.model.predict(batch["x"])
+            batch["y_prediction"] = self.model.predict(batch["y"])
+
+        if is_train:
+            self.model.train()
+
         for key in loss_out.keys():
             metrics.update(key, batch[key].item())
 
@@ -133,22 +141,6 @@ class Trainer(BaseTrainer):
             current = batch_idx
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
-
-    def _log_predictions(self, audio, audio_path, prediction, target, examples_to_log=5, *args, **kwargs):
-        pass
-        # if self.writer is None:
-        #     return
-        # tuple = list(zip(audio, audio_path, prediction, target))
-        # shuffle(tuple)
-        # rows = {}
-        # for audio_sample, path, pred, audio_target in tuple[:examples_to_log]:
-        #     # self.writer.add_audio(Path(path).name, audio_sample, self.config["preprocessing"]["sr"])
-
-        #     rows[Path(path).name] = {
-        #         "target": "bonafide" if audio_target == 1 else "spoofed",
-        #         "prediction": "bonafide" if pred.argmax().item() == 1 else "spoofed"
-        #     }
-        # self.writer.add_table("predictions", pd.DataFrame.from_dict(rows, orient="index"))
 
     def _log_audio(self, audio_batch, name="audio"):
         audio = random.choice(audio_batch.cpu())

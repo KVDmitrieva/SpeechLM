@@ -58,7 +58,21 @@
     "args": {
     }
   },
-  "metrics": [],
+  "metrics": [
+    {
+      "type": "MeanCleanScore",
+      "args": {
+        "name": "Clean score"
+      }
+    },
+    {
+        "type": "MeanAugScore",
+        "args": {
+          "name": "Aug score"
+        }
+      }
+    }
+  ],
   "lr_scheduler": {
     "type": "StepLR",
     "args": {
