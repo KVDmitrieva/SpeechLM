@@ -2,7 +2,6 @@ import logging
 import random
 from typing import List
 
-import numpy as np
 import torch
 import torchaudio
 from torch import Tensor
@@ -28,14 +27,10 @@ class BaseDataset(Dataset):
         clean_audio = self.load_audio(data_dict['clean_path'])
         aug_audio = self.load_audio(data_dict['aug_path'])
 
-        return {
-            "clean audio": clean_audio,
-            "aug_audio": aug_audio
-        }
-
-    @staticmethod
-    def _sort_index(index):
-        return sorted(index, key=lambda x: x["audio_len"])
+        if random.random() >= 0.5:
+            return {"x": clean_audio, "y": aug_audio, "l_value": 1.}
+        
+        return {"x": aug_audio, "y": clean_audio, "l_value": 0.}
 
     def __len__(self):
         return len(self._index)

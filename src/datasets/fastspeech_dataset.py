@@ -27,9 +27,11 @@ class FastspeechDataset(BaseDataset):
     """
     def __init__(self, part, data_dir, *args, **kwargs):
         assert part in ["train", "test"]
+
         self._data_dir = Path(data_dir)
         self._index_dir = ROOT_PATH / "data" / "datasets" / "fastspeech"
         self._index_dir.mkdir(exist_ok=True, parents=True)
+        
         index = self._get_or_load_index(part)
         super().__init__(index, *args, **kwargs)
 

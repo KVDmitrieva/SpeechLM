@@ -2,6 +2,7 @@ import argparse
 import collections
 import warnings
 
+import random
 import numpy as np
 import torch
 
@@ -21,6 +22,7 @@ torch.manual_seed(SEED)
 torch.backends.cudnn.deterministic = True
 torch.backends.cudnn.benchmark = False
 np.random.seed(SEED)
+random.seed(SEED)
 
 
 def main(config):
@@ -41,10 +43,7 @@ def main(config):
 
     # get function handles of loss and metrics
     loss_module = config.init_obj(config["loss"], module_loss).to(device)
-    metrics = [
-        config.init_obj(metric_dict, module_metric)
-        for metric_dict in config["metrics"]
-    ]
+    metrics = [config.init_obj(metric_dict, module_metric) for metric_dict in config["metrics"]]
 
     # build optimizer, learning rate scheduler. delete every line containing lr_scheduler for
     # disabling scheduler

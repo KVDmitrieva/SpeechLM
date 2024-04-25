@@ -10,16 +10,17 @@ def collate_fn(dataset_items: List[dict]):
     """
     Collate and pad fields in dataset items
     """
-    clean_audio = []
-    aug_audio = []
+    x, y, l_value = [], [], []
 
 
     for item in dataset_items:
-        clean_audio.append(item["clean_audio"].T)
-        aug_audio.append(item["aug_audio"].T)
+        x.append(item["x"].T)
+        y.append(item["y"].T)
+        l_value.append(item["l_value"])
 
 
     return {
-        "aug_audio": pad_sequence(aug_audio, batch_first=True).transpose(1, 2),
-        "clean_audio": pad_sequence(clean_audio, batch_first=True).transpose(1, 2)
+        "x": pad_sequence(x, batch_first=True).transpose(1, 2),
+        "y": pad_sequence(y, batch_first=True).transpose(1, 2),
+        "l_value": torch.tensor(l_value)
     }
