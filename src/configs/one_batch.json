@@ -71,7 +71,6 @@
           "name": "Aug score"
         }
       }
-    }
   ],
   "lr_scheduler": {
     "type": "StepLR",
