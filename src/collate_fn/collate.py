@@ -20,7 +20,7 @@ def collate_fn(dataset_items: List[dict]):
 
 
     return {
-        "x": pad_sequence(x, batch_first=True).transpose(1, 2),
-        "y": pad_sequence(y, batch_first=True).transpose(1, 2),
+        "x": pad_sequence(x, batch_first=True).transpose(1, 2).squeeze(1),
+        "y": pad_sequence(y, batch_first=True).transpose(1, 2).squeeze(1),
         "l_value": torch.tensor(l_value)
     }
