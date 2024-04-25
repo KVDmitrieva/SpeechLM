@@ -61,9 +61,7 @@ class Trainer(BaseTrainer):
                 
                 # TODO: add logs
                 # self._log_predictions(**batch)
-                # self._log_spectrogram(batch["spectrogram"])
-                # self._log_audio(batch["audio"])
-                # self._log_scalars(self.train_metrics)
+                self._log_scalars(self.train_metrics)
 
                 last_train_metrics = self.train_metrics.result()
                 self.train_metrics.reset()
@@ -117,10 +115,9 @@ class Trainer(BaseTrainer):
                 batch = self.process_batch(batch, is_train=False, metrics=self.evaluation_metrics)
 
             self.writer.set_step(epoch * self.len_epoch, part)
+            self._log_scalars(self.evaluation_metrics)
             # TODO: add logs
-            # self._log_scalars(self.evaluation_metrics)
             # self._log_predictions(**batch)
-            # self._log_audio(batch["audio"])
 
         # add histogram of model parameters to the tensorboard
         for name, p in self.model.named_parameters():
