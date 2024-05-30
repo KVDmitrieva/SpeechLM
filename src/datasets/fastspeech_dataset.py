@@ -48,7 +48,7 @@ class FastspeechDataset(BaseDataset):
 
     def _create_index(self, part):
         index = []
-        data_json = self._data_dir / "audio" / f"{part}.json"
+        data_json = self._data_dir / f"{part}.json"
         with open(data_json, "r") as f:
             files = json.load(f)
 
