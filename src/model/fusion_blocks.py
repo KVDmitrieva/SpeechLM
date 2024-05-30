@@ -87,7 +87,7 @@ class CrossAttentionFusion(BaseFusion):
         return res, attention
     
     def _fix_shapes(self, x, y):
-        diff = y.shape[-1] - x.shape[-1]
-        x = F.pad(x, (0, max(0, diff)))
-        y = F.pad(y, (0, max(0, -diff)))
+        diff = y.shape[-2] - x.shape[-2]
+        x = F.pad(x, (0, 0, 0, max(0, diff)))
+        y = F.pad(y, (0, 0, 0, max(0, -diff)))
         return x, y

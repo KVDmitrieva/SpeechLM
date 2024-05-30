@@ -24,7 +24,7 @@ class Trainer(BaseTrainer):
         self.skip_oom = skip_oom
         self.config = config
 
-        self.log_step = 50
+        self.log_step = 10
 
         self._setup_loaders(dataloaders, len_epoch=len_epoch)
 
