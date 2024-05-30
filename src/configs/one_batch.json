@@ -13,7 +13,7 @@
   "arch": {
     "type": "SpeechLMMos",
     "args": {
-      "checkpoint_path": "/kaggle/working/SpeechLM/speechlmh_base_checkpoint_clean.pt"
+      "checkpoint_path": "./speechlmh_base_checkpoint_clean.pt"
     }
   },
   "data": {
@@ -25,7 +25,7 @@
           "type": "FastspeechDataset",
           "args": {
             "part": "test",
-            "data_dir": "/kaggle/input/fastspeech-audio",
+            "data_dir": "./data",
             "limit": 32
           }
         }
@@ -39,7 +39,7 @@
           "type": "FastspeechDataset",
           "args": {
             "part": "test",
-            "data_dir": "/kaggle/input/fastspeech-audio",
+            "data_dir": "./data",
             "limit": 32
           }
         }

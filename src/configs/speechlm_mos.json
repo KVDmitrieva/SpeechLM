@@ -13,42 +13,41 @@
   "arch": {
     "type": "SpeechLMMos",
     "args": {
-      "freeze": true,
-      "checkpoint_path": "TODO"
+      "checkpoint_path": "./speechlmh_base_checkpoint_clean.pt"
     }
   },
   "data": {
     "train": {
-      "batch_size": 32,
+      "batch_size": 64,
       "num_workers": 0,
       "datasets": [
         {
           "type": "FastspeechDataset",
           "args": {
             "part": "train",
-            "data_dir": "TODO"
+            "data_dir": "./data"
           }
         }
       ]
     },
     "val": {
-      "batch_size": 32,
+      "batch_size": 64,
       "num_workers": 0,
       "datasets": [
         {
           "type": "FastspeechDataset",
           "args": {
             "part": "test",
-            "data_dir": "TODO"
+            "data_dir": "./data"
           }
         }
       ]
     }
   },
   "optimizer": {
-    "type": "Adam",
+    "type": "AdamW",
     "args": {
-      "lr": 1e-4,
+      "lr": 3e-4,
       "weight_decay": 1e-4
     }
   },
@@ -57,7 +56,20 @@
     "args": {
     }
   },
-  "metrics": [],
+  "metrics": [
+    {
+      "type": "MeanCleanScore",
+      "args": {
+        "name": "Clean score"
+      }
+    },
+    {
+        "type": "MeanAugScore",
+        "args": {
+          "name": "Aug score"
+        }
+      }
+  ],
   "lr_scheduler": {
     "type": "StepLR",
     "args": {
@@ -68,7 +80,7 @@
   "trainer": {
     "epochs": 100,
     "save_dir": "saved/",
-    "save_period": 5,
+    "save_period": 10,
     "verbosity": 2,
     "monitor": "min val_loss",
     "early_stop": 100,
