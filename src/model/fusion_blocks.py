@@ -21,6 +21,15 @@ class BaseFusion(nn.Module):
     @abstractmethod
     def predict(self, x) -> float:
         raise NotImplementedError()
+    
+    def _init_weights(self, mean=0.0, std=0.01):
+        for layer in self.modules():
+            if isinstance(layer, nn.Linear):
+                nn.init.xavier_uniform_(layer.weight)
+                if layer.bias is not None:
+                    layer.bias.data.fill_(0)
+            elif layer.__class__.__name__.find("Conv") != -1:
+                layer.weight.data.normal_(mean=mean, std=std)
 
 
 class LinearFusion(BaseFusion):
@@ -32,6 +41,7 @@ class LinearFusion(BaseFusion):
             nn.Dropout(dropout),
             nn.Linear(hidden_dim, 1)
         )
+        self._init_weights()
 
     def predict(self, x):
         x_proj = self.projection(x) # [batch, time, 1]
@@ -59,7 +69,8 @@ class CrossAttentionFusion(BaseFusion):
             nn.Dropout(dropout),
             nn.Linear(hidden_dim, 1)
         )
-
+        self._init_weights()
+        
     def predict(self, x, y=None, return_attention=False):
         query = self.q_proj(x)
         key = self.k_proj(x)
