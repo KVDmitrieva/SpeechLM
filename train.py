@@ -13,6 +13,7 @@ from src.trainer import Trainer
 from src.utils import prepare_device
 from src.utils.object_loading import get_dataloaders
 from src.utils.parse_config import ConfigParser
+from src.scheduler import CosineAnnealingWithWarmupLR
 
 warnings.filterwarnings("ignore", category=UserWarning)
 
@@ -49,7 +50,10 @@ def main(config):
     # disabling scheduler
     trainable_params = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = config.init_obj(config["optimizer"], torch.optim, trainable_params)
-    lr_scheduler = config.init_obj(config["lr_scheduler"], torch.optim.lr_scheduler, optimizer)
+    if config["lr_scheduler"]["type"] == "CosineAnnealingWithWarmupLR":
+        lr_scheduler = config.init_obj(config["lr_scheduler"], CosineAnnealingWithWarmupLR, optimizer)
+    else:
+        lr_scheduler = config.init_obj(config["lr_scheduler"], torch.optim.lr_scheduler, optimizer)
 
     trainer = Trainer(
         model,
