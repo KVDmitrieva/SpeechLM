@@ -70,7 +70,7 @@ class CrossAttentionFusion(BaseFusion):
             nn.Linear(hidden_dim, 1)
         )
         self._init_weights()
-        
+
     def predict(self, x, y=None, return_attention=False):
         query = self.q_proj(x)
         key = self.k_proj(x)
@@ -78,7 +78,7 @@ class CrossAttentionFusion(BaseFusion):
 
         res, attention = self._scaled_softmax_attention(query, key, value)
        
-        proj = self.projection(res)
+        proj = self.projection(res).mean(dim=[1, 2])
         out = 1. - F.sigmoid(proj)
 
         if return_attention:
