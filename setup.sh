@@ -1,5 +1,5 @@
 echo "Install requirements"
-pip install -r requirements.txt
+pip install -q-r requirements.txt
 
 echo "Download SpeechLM checkpoint"
 pip install gdown
