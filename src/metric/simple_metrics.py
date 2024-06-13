@@ -33,5 +33,5 @@ class Accuracy(BaseMetric):
         labels = torch.min(preds, dim=0)[1]
         true_labels = l_value > 0.5
 
-        mean_score = (true_labels == labels).mean()
+        mean_score = (true_labels == labels).int().mean()
         return mean_score
