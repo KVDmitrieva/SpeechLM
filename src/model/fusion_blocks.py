@@ -79,7 +79,7 @@ class CrossAttentionFusion(BaseFusion):
         res, attention = self._scaled_softmax_attention(query, key, value)
        
         proj = self.projection(res).mean(dim=[1, 2])
-        out = 1. - F.sigmoid(proj)
+        out = 1. - F.sigmoid(-proj)
 
         if return_attention:
             return out, attention
