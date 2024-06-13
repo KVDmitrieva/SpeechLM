@@ -1,5 +1,5 @@
 {
-  "name": "SpeechLMMos",
+  "name": "SpeechLMMos Cross",
   "n_gpu": 1,
   "preprocessing": {
     "sr": 16000,
@@ -13,32 +13,33 @@
   "arch": {
     "type": "SpeechLMMos",
     "args": {
-      "checkpoint_path": "./speechlmh_base_checkpoint_clean.pt"
+      "checkpoint_path": "./speechlmh_base_checkpoint_clean.pt",
+      "fusion_mode": "cross"
     }
   },
   "data": {
     "train": {
-      "batch_size": 64,
+      "batch_size": 48,
       "num_workers": 0,
       "datasets": [
         {
           "type": "FastspeechDataset",
           "args": {
             "part": "train",
-            "data_dir": "./data"
+            "data_dir": "/kaggle/input/fastspeech-audio/audio_more_augs/audio"
           }
         }
       ]
     },
     "val": {
-      "batch_size": 64,
+      "batch_size": 48,
       "num_workers": 0,
       "datasets": [
         {
           "type": "FastspeechDataset",
           "args": {
             "part": "test",
-            "data_dir": "./data"
+            "data_dir": "/kaggle/input/fastspeech-audio/audio_more_augs/audio"
           }
         }
       ]
@@ -71,14 +72,14 @@
       }
   ],
   "lr_scheduler": {
-    "type": "StepLR",
+    "type": "CosineAnnealingWithWarmupLR",
     "args": {
-      "step_size": 100,
-      "gamma": 1.0
+      "warmup_steps": 200, 
+      "max_steps": 2000
     }
   },
   "trainer": {
-    "epochs": 100,
+    "epochs": 20,
     "save_dir": "saved/",
     "save_period": 10,
     "verbosity": 2,
