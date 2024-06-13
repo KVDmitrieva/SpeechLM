@@ -9,6 +9,7 @@ import torch
 import src.loss as module_loss
 import src.metric as module_metric
 import src.model as module_arch
+import src.scheduler as module_sched
 from src.trainer import Trainer
 from src.utils import prepare_device
 from src.utils.object_loading import get_dataloaders
@@ -51,7 +52,7 @@ def main(config):
     trainable_params = filter(lambda p: p.requires_grad, model.parameters())
     optimizer = config.init_obj(config["optimizer"], torch.optim, trainable_params)
     if config["lr_scheduler"]["type"] == "CosineAnnealingWithWarmupLR":
-        lr_scheduler = config.init_obj(config["lr_scheduler"], CosineAnnealingWithWarmupLR, optimizer)
+        lr_scheduler = config.init_obj(config["lr_scheduler"], module_sched, optimizer)
     else:
         lr_scheduler = config.init_obj(config["lr_scheduler"], torch.optim.lr_scheduler, optimizer)
 
