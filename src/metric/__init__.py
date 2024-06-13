@@ -1,6 +1,7 @@
-from src.metric.simple_metrics import MeanCleanScore, MeanAugScore
+from src.metric.simple_metrics import MeanCleanScore, MeanAugScore, Accuracy
 
 __all__ = [
     "MeanCleanScore",
-    "MeanAugScore"
+    "MeanAugScore",
+    "Accuracy"
 ]

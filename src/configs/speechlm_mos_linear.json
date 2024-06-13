@@ -68,6 +68,12 @@
         "args": {
           "name": "Aug score"
         }
+      },
+      {
+        "type": "Accuracy",
+        "args": {
+          "name": "Accuracy"
+        }
       }
   ],
   "lr_scheduler": {
