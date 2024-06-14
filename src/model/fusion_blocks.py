@@ -73,7 +73,7 @@ class CrossAttentionFusion(BaseFusion):
 
     def predict(self, x, y=None, return_attention=False):
         query = self.q_proj(x)
-        key = self.k_proj(x)
+        key = self.k_proj(x) if y is None else self.k_proj(y)
         value = self.v_proj(x) if y is None else self.v_proj(y)
 
         res, attention = self._scaled_softmax_attention(query, key, value)
