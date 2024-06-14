@@ -149,7 +149,7 @@ class Trainer(BaseTrainer):
         if self.model.mode != "cross":
             return
 
-        ind = randint(0, batch["x"].shape[-1] - 1)
+        ind = randint(0, batch["x"].shape[0] - 1)
         x = batch["x"][ind].unsqueeze(0)
         y = batch["y"][ind].unsqueeze(0)
 
