@@ -15,7 +15,7 @@ class BaseFusion(nn.Module):
         super().__init__()
 
     @abstractmethod
-    def forward(self, x, y) -> float:
+    def forward(self, x, y, **batch) -> float:
         raise NotImplementedError()
     
     @abstractmethod
@@ -47,7 +47,7 @@ class LinearFusion(BaseFusion):
         x_proj = self.projection(x) # [batch, time, 1]
         return x_proj.mean(dim=[1, 2]) #[batch]
 
-    def forward(self, x, y):
+    def forward(self, x, y, **batch):
         x_pred = self.predict(x)
         y_pred = self.predict(y)
 
@@ -86,7 +86,7 @@ class CrossAttentionFusion(BaseFusion):
         
         return out
 
-    def forward(self, x, y, return_attention=False):
+    def forward(self, x, y, return_attention=False, **batch):
         x, y = self._fix_shapes(x, y)
         return self.predict(x, y, return_attention)
     

@@ -1,6 +1,6 @@
 import random
 from pathlib import Path
-from random import shuffle
+from random import shuffle, randint
 
 import PIL
 import pandas as pd
@@ -11,6 +11,7 @@ from tqdm import tqdm
 
 from src.trainer.base_trainer import BaseTrainer
 from src.utils import inf_loop, MetricTracker
+from src.logger.utils import plot_attention_to_buf
 
 
 class Trainer(BaseTrainer):
@@ -61,6 +62,7 @@ class Trainer(BaseTrainer):
                 
                 # TODO: add logs
                 # self._log_predictions(**batch)
+                self._log_attention(**batch)
                 self._log_scalars(self.train_metrics)
 
                 last_train_metrics = self.train_metrics.result()
@@ -124,6 +126,7 @@ class Trainer(BaseTrainer):
 
             self.writer.set_step(epoch * self.len_epoch, part)
             self._log_scalars(self.evaluation_metrics)
+            self._log_attention(**batch)
             # TODO: add logs
             # self._log_predictions(**batch)
 
@@ -141,7 +144,29 @@ class Trainer(BaseTrainer):
             current = batch_idx
             total = self.len_epoch
         return base.format(current, total, 100.0 * current / total)
+    
+    def _log_attention(self, batch):
+        ind = randint(0, batch["x"].shape[-1] - 1)
+        x = batch["x"][ind].unsqueeze(0)
+        y = batch["y"][ind].unsqueeze(0)
 
+        x_in = torch.cat([x, y])
+        y_in = torch.cat([y, x])
+
+        if batch["l_value"][ind] < 0.5:
+            x_in, y_in = y_in, x_in
+
+        small_batch = {
+            "x": x_in, "y": y_in, "return_attention": True
+        }
+
+        with torch.no_grad():
+            _, attention = self.model(**small_batch)
+        
+        for i, name in enumerate(["Clean vs Aug", "Aug vs Clean"]):
+            image = PIL.Image.open(plot_attention_to_buf(attention[i].detach().cpu()))
+            self.writer.add_image(name, ToTensor()(image))
+        
     def _log_audio(self, audio_batch, name="audio"):
         audio = random.choice(audio_batch.cpu())
         self.writer.add_audio(name, audio, self.config["preprocessing"]["sr"])

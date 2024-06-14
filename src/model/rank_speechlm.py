@@ -12,12 +12,13 @@ class SpeechLMMos(BaseModel):
         assert fusion_mode in ["linear", "cross"], "Wrong fusion mode!"
 
         self._setup_encoder(checkpoint_path)
+        self.mode = fusion_mode
         self.fusion = LinearFusion() if fusion_mode == "linear" else CrossAttentionFusion()
         
     def forward(self, x, y, **batch):
         x = self.encoder.extract_features(x)[0] 
         y = self.encoder.extract_features(y)[0]
-        return self.fusion(x, y)
+        return self.fusion(x, y, **batch)
     
     def predict(self, x):
         x = self.encoder.extract_features(x)[0] # [Batch, time, feats]
