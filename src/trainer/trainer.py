@@ -62,7 +62,7 @@ class Trainer(BaseTrainer):
                 
                 # TODO: add logs
                 # self._log_predictions(**batch)
-                self._log_attention(**batch)
+                self._log_attention(batch)
                 self._log_scalars(self.train_metrics)
 
                 last_train_metrics = self.train_metrics.result()
@@ -126,7 +126,7 @@ class Trainer(BaseTrainer):
 
             self.writer.set_step(epoch * self.len_epoch, part)
             self._log_scalars(self.evaluation_metrics)
-            self._log_attention(**batch)
+            self._log_attention(batch)
             # TODO: add logs
             # self._log_predictions(**batch)
 
