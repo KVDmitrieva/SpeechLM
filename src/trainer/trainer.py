@@ -153,8 +153,8 @@ class Trainer(BaseTrainer):
         ind = randint(0, batch["x"].shape[0] - 1)
 
         diff = batch["x"].shape[-1] - batch["y"].shape[-1]
-        x = F.pad(batch["x"][ind].unsqueeze(0), 0, max(0, -diff))
-        y = F.pad(batch["y"][ind].unsqueeze(0), 0, max(0, diff))
+        x = F.pad(batch["x"][ind].unsqueeze(0), (0, max(0, -diff)))
+        y = F.pad(batch["y"][ind].unsqueeze(0), (0, max(0, diff)))
 
         x_in = torch.cat([x, y])
         y_in = torch.cat([y, x])
