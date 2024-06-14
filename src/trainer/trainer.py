@@ -5,6 +5,7 @@ from random import shuffle, randint
 import PIL
 import pandas as pd
 import torch
+import torch.nn.functional as F
 from torch.nn.utils import clip_grad_norm_
 from torchvision.transforms import ToTensor
 from tqdm import tqdm
@@ -150,8 +151,10 @@ class Trainer(BaseTrainer):
             return
 
         ind = randint(0, batch["x"].shape[0] - 1)
-        x = batch["x"][ind].unsqueeze(0)
-        y = batch["y"][ind].unsqueeze(0)
+
+        diff = batch["x"].shape[-1] - batch["y"].shape[-1]
+        x = F.pad(batch["x"][ind].unsqueeze(0), 0, max(0, -diff))
+        y = F.pad(batch["y"][ind].unsqueeze(0), 0, max(0, diff))
 
         x_in = torch.cat([x, y])
         y_in = torch.cat([y, x])
