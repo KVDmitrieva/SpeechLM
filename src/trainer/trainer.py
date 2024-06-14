@@ -146,6 +146,9 @@ class Trainer(BaseTrainer):
         return base.format(current, total, 100.0 * current / total)
     
     def _log_attention(self, batch):
+        if self.model.mode != "cross":
+            return
+
         ind = randint(0, batch["x"].shape[-1] - 1)
         x = batch["x"][ind].unsqueeze(0)
         y = batch["y"][ind].unsqueeze(0)
