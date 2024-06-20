@@ -25,7 +25,7 @@
           "type": "FastspeechDataset",
           "args": {
             "part": "train",
-            "data_dir": "/kaggle/input/fastspeech-audio/audio_more_augs/audio"
+            "data_dir": "/kaggle/input/fastspeech-audio/audio_v3/audio"
           }
         }
       ]
@@ -38,7 +38,7 @@
           "type": "FastspeechDataset",
           "args": {
             "part": "test",
-            "data_dir": "/kaggle/input/fastspeech-audio/audio_more_augs/audio"
+            "data_dir": "/kaggle/input/fastspeech-audio/audio_v3/audio"
           }
         }
       ]
@@ -84,7 +84,7 @@
     }
   },
   "trainer": {
-    "epochs": 20,
+    "epochs": 10,
     "save_dir": "saved/",
     "save_period": 10,
     "verbosity": 2,
