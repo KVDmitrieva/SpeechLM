@@ -16,9 +16,9 @@ class SpeechLMMos(BaseModel):
         if fusion_mode == "linear":
             self.fusion = LinearFusion()
         elif fusion_mode == "cross":
-            self.fusion = CrossAttentionFusion
+            self.fusion = CrossAttentionFusion()
         else:
-            self.fusion = StrictCrossAttention
+            self.fusion = StrictCrossAttention()
         
     def forward(self, x, y, **batch):
         x = self.encoder.extract_features(x)[0] 
