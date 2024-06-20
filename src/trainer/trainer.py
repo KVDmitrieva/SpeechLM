@@ -172,6 +172,10 @@ class Trainer(BaseTrainer):
         for i, name in enumerate(["Clean vs Aug", "Aug vs Clean"]):
             image = PIL.Image.open(plot_attention_to_buf(attention[i].detach().cpu()))
             self.writer.add_image(name, ToTensor()(image))
+
+        self.writer.add_audio("Clean audio", x_in[0].cpu(), self.config["preprocessing"]["sr"])
+        self.writer.add_audio("Aug audio", x_in[1].cpu(), self.config["preprocessing"]["sr"])
+        
         
     def _log_audio(self, audio_batch, name="audio"):
         audio = random.choice(audio_batch.cpu())
