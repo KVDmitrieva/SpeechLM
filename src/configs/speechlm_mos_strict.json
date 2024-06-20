@@ -1,0 +1,98 @@
+{
+  "name": "SpeechLMMos StrictCross",
+  "n_gpu": 1,
+  "preprocessing": {
+    "sr": 16000,
+    "spectrogram": {
+      "type": "MelSpectrogram",
+      "args": {
+      }
+    },
+    "log_spec": true
+  },
+  "arch": {
+    "type": "SpeechLMMos",
+    "args": {
+      "checkpoint_path": "./speechlmh_base_checkpoint_clean.pt",
+      "fusion_mode": "strict"
+    }
+  },
+  "data": {
+    "train": {
+      "batch_size": 48,
+      "num_workers": 0,
+      "datasets": [
+        {
+          "type": "FastspeechDataset",
+          "args": {
+            "part": "train",
+            "data_dir": "/kaggle/input/fastspeech-audio/audio_v3/audio"
+          }
+        }
+      ]
+    },
+    "val": {
+      "batch_size": 48,
+      "num_workers": 0,
+      "datasets": [
+        {
+          "type": "FastspeechDataset",
+          "args": {
+            "part": "test",
+            "data_dir": "/kaggle/input/fastspeech-audio/audio_v3/audio"
+          }
+        }
+      ]
+    }
+  },
+  "optimizer": {
+    "type": "AdamW",
+    "args": {
+      "lr": 3e-4,
+      "weight_decay": 1e-4
+    }
+  },
+  "loss": {
+    "type": "RankLoss",
+    "args": {
+    }
+  },
+  "metrics": [
+    {
+      "type": "MeanCleanScore",
+      "args": {
+        "name": "Clean score"
+      }
+    },
+    {
+        "type": "MeanAugScore",
+        "args": {
+          "name": "Aug score"
+        }
+      },
+      {
+        "type": "Accuracy",
+        "args": {
+          "name": "Accuracy"
+        }
+      }
+  ],
+  "lr_scheduler": {
+    "type": "CosineAnnealingWithWarmupLR",
+    "args": {
+      "warmup_steps": 100, 
+      "max_steps": 2000
+    }
+  },
+  "trainer": {
+    "epochs": 10,
+    "save_dir": "saved/",
+    "save_period": 10,
+    "verbosity": 2,
+    "monitor": "min val_loss",
+    "early_stop": 100,
+    "visualize": "wandb",
+    "wandb_project": "speechlm",
+    "grad_norm_clip": 10
+  }
+}

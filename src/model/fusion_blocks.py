@@ -102,3 +102,14 @@ class CrossAttentionFusion(BaseFusion):
         x = F.pad(x, (0, 0, 0, max(0, diff)))
         y = F.pad(y, (0, 0, 0, max(0, -diff)))
         return x, y
+    
+class StrictCrossAttention(CrossAttentionFusion):
+    def __init__(self, input_dim=768, hidden_dim=128, dropout=0.1):
+        super().__init__(input_dim, hidden_dim, dropout)
+
+    def forward(self, x, y, l_value, return_attention=False, **batch):
+        x, y = self._fix_shapes(x, y)
+        mask = l_value > 0.5
+        clean = torch.cat([x[mask], y[mask]], dim=-1)
+        aug = torch.cat([y[~mask], x[~mask]], dim=-1)
+        return self.predict(clean, aug, return_attention)

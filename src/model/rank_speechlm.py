@@ -2,18 +2,23 @@ import torch
 
 from src.SpeechLM.SpeechLM import SpeechLM, SpeechLMConfig
 from src.model.base_model import BaseModel
-from src.model.fusion_blocks import LinearFusion, CrossAttentionFusion
+from src.model.fusion_blocks import LinearFusion, CrossAttentionFusion, StrictCrossAttention
 
 
 
 class SpeechLMMos(BaseModel):
     def __init__(self, checkpoint_path: str = None, fusion_mode="linear"):
         super().__init__()
-        assert fusion_mode in ["linear", "cross"], "Wrong fusion mode!"
+        assert fusion_mode in ["linear", "cross", "strict"], "Wrong fusion mode!"
 
         self._setup_encoder(checkpoint_path)
         self.mode = fusion_mode
-        self.fusion = LinearFusion() if fusion_mode == "linear" else CrossAttentionFusion()
+        if fusion_mode == "linear":
+            self.fusion = LinearFusion()
+        elif fusion_mode == "cross":
+            self.fusion = CrossAttentionFusion
+        else:
+            self.fusion = StrictCrossAttention
         
     def forward(self, x, y, **batch):
         x = self.encoder.extract_features(x)[0] 
